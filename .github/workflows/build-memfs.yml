@@ -18,18 +18,18 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Build dokan_memfs
+      - name: Build dokan_memfs project
         shell: cmd
         run: |
           cd dokany
-          msbuild dokan.sln ^
-            /t:dokan_memfs ^
+          msbuild samples\dokan_memfs\dokan_memfs.vcxproj ^
+            /m ^
             /p:Configuration=Release ^
-            /p:Platform=x64 ^
-            /m
+            /p:Platform=x64
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: dokan_memfs
-          path: dokany\**\x64\Release\dokan_memfs.exe
+          path: |
+            dokany\**\dokan_memfs.exe
