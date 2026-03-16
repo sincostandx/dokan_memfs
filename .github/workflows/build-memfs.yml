@@ -32,4 +32,4 @@ jobs:
         with:
           name: dokan_memfs
           path: |
-            dokany\**\dokan_memfs.exe
+            dokany\**\memfs.exe
