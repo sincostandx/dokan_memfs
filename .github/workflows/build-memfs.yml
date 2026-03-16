@@ -1,0 +1,40 @@
+name: build-dokan-memfs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout Dokany source
+        uses: actions/checkout@v4
+        with:
+          repository: dokan-dev/dokany
+          submodules: recursive
+          path: dokany
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Install WDK
+        shell: powershell
+        run: |
+          winget install --id Microsoft.WindowsDriverKit -e --accept-source-agreements --accept-package-agreements
+
+      - name: Build dokan_memfs
+        shell: cmd
+        run: |
+          cd dokany
+          msbuild dokan.sln ^
+            /t:dokan_memfs ^
+            /p:Configuration=Release ^
+            /p:Platform=x64 ^
+            /m
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dokan_memfs
+          path: dokany\**\x64\Release\dokan_memfs.exe
